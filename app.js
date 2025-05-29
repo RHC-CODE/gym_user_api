@@ -1,15 +1,26 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors'); // 🟢 Importa cors
 const userRoutes = require('./routes/userRoutes');
 require('dotenv').config();
 
 const app = express();
+
+// 🟢 Habilita CORS
+app.use(cors());
+
+// 🟢 Middleware para parsear JSON
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI);
-
-
+// 🟢 Rutas
 app.use('/users', userRoutes);
 
-const PORT = process.env.PORT || 3000;
-//app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
+// 🟢 Conexión a MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('Conectado a MongoDB'))
+  .catch(err => console.error('Error de conexión a MongoDB:', err));
+
+// 🟢 Exportar app para que funcione en Vercel
+module.exports = app;
+
+
